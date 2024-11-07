@@ -359,26 +359,6 @@ x_test_sel_with_outliers_mMScale = SelectFeatures(x_test_with_outliers_mMScaler,
 x_train_sel_without_outliers_mMScale = SelectFeatures(x_train_without_outliers_mMScaler, y_train, "x_train_without_outliers_mMScaler")
 x_test_sel_without_outliers_mMScale = SelectFeatures(x_test_with_outliers_mMScaler, y_test, "x_test_with_outliers_mMScaler")
 
-#Para acabara añadimos el target a los datasets.
-
-target = "y"
-def AgreeTarget(dataset, y, target = target):
-    dataset[target] = list(y) #Si no le pones el list le pasa los indices y se crear valores NaN
-    return dataset
-
-AgreeTarget(x_train_sel_with_outliers, y_train)
-AgreeTarget(x_test_sel_with_outliers, y_test)
-AgreeTarget(x_train_sel_without_outliers, y_train)
-AgreeTarget(x_test_sel_without_outliers, y_test)
-AgreeTarget(x_train_sel_with_outliers_standarscale, y_train)
-AgreeTarget(x_test_sel_with_outliers_standarscale, y_test)
-AgreeTarget(x_train_sel_without_outliers_standarscale, y_train)
-AgreeTarget(x_test_sel_without_outliers_standarscale, y_test)
-AgreeTarget(x_train_sel_with_outliers_mMScale, y_train)
-AgreeTarget(x_test_sel_with_outliers_mMScale, y_test)
-AgreeTarget(x_train_sel_without_outliers_mMScale, y_train)
-AgreeTarget(x_test_sel_without_outliers_mMScale, y_test)
-
 #Para acabar nos guardamos los datasets en un csv
 
 def DataToCsv(dataset, filename):
@@ -441,21 +421,14 @@ grid.best_params_
 
 #Guardamos el modelo entrenado
 
-best_model = grid.best_estimator_
+clf = grid.best_estimator_
 
-y_test_predict = best_model.predict(x_test_sel_without_outliers_standarscale)
+y_test_predict = clf.predict(x_test_sel_without_outliers_standarscale)
 
+dump(clf, open("../models/logistic_regresion.sav", "wb"))
+    
 accuracy_score(y_test, y_test_predict)
 
-#Creamos la matriz de confusion para ver donde estaban los errores
-
-confmatrx = pd.DataFrame(confusion_matrix(y_test, y_test_predict))
-
-plt.figure(figsize=(5,5))
-
-sns.heatmap(data = confmatrx, annot = True, fmt="d", cbar = False)
-
-plt.show()
 
 #Creamos la matriz de confusion para ver donde estaban los errores
 
